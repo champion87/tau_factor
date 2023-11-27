@@ -18,6 +18,10 @@ def request_and_save(code: str) -> None:
     with open(f"{code}.json", "w") as dump_me:
         json.dump(request(code), dump_me, indent=4)
 
+def save_json(file_name, the_json):
+    with open(file_name, "w") as dump_me:
+        json.dump(the_json, dump_me, indent=4)
+
 def main():
     hedva = request(HEDVA_CODE)
     hedva_simp = simplify(hedva)
