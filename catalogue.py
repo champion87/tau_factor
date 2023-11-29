@@ -15,6 +15,11 @@ def get_matches(prefix: str):
         res.append(required_data)
     return res
 
+# 0 <= num < 10000
+def int_to_code(num, len = 4):
+    if not ( 0 < num or num <= 10**len ):
+        raise Exception("Int out of range") 
+    return str(num).zfill(len)
 def main():
     print(get_matches(HEDVA_CODE[:4]))
     
