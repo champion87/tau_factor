@@ -38,10 +38,19 @@ def format_query(code: str) -> str:
         prefix = code[:DASH_INDEX_COURSE_CODE_FORMAT]
         suffix = code[DASH_INDEX_COURSE_CODE_FORMAT:]
         return prefix + "-" + suffix
-
+    
+#bases is a list!!!
+def append_all_digits_rec(digits: list[chr], bases: list[str], times: int) -> list[str]:
+    if times < 0:
+        raise Exception(f"Bad value of 'times' in add_all_digits_rec: {times}")
+    elif times == 0:
+        return bases
+    else:
+        variations = [base + digit for digit in digits for base in bases]
+        return append_all_digits_rec(digits, variations, times - 1)  
 
 def complete_to_min_query(prefix: str) -> list[str]:
-    DIGITS = [0,1,2,3,4,5,6,7,8,9]
+    DIGITS = ['0','1','2','3','4','5','6','7','8','9']
     
     if not prefix.isdecimal():
         raise Exception(f"The prefix {prefix} was given to complete_to_min_query, but it's bad. Expected decimal prefix (or at least already-formated code)")
@@ -50,7 +59,8 @@ def complete_to_min_query(prefix: str) -> list[str]:
     elif len(prefix) >= MIN_QUERY_LEN:
         return [prefix]
     else:
-        pass
+        missing_digits = MIN_QUERY_LEN - len(prefix)
+        return append_all_digits_rec(DIGITS, [prefix], missing_digits)
 
 class CourseStatistics:
     def __init__(self, average, histogram):
