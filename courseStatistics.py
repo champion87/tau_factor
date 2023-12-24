@@ -7,12 +7,16 @@ DEFAULT_FIELDS = ["year", "semester", "statistics"]
 CS_PREFIX = "0368"
 MATH_PREFIX = "0366"
 
+DASH_INDEX_COURSE_CODE_FORMAT = 4
+
 MIN_QUERY_LEN = 3
 MAX_QUERY_LEN = 8
 
 
 #TODO empty results
 #TODO many results
+
+
 
 def simplify(course_details: dict, fields=DEFAULT_FIELDS): 
     results = course_details["results"][0]
@@ -23,8 +27,30 @@ def simplify(course_details: dict, fields=DEFAULT_FIELDS):
         res.append(simplified)
     return res
 
-def complete_to_min_query(prefix: str):
-    pass
+def format_query(code: str) -> str:
+    if not code.isdecimal():                      #code is invalid
+        raise Exception(f"The code {code} was given to format_query, but it's bad. Expected decimal code (or at least already-formated code)")
+    elif len(code) <= DASH_INDEX_COURSE_CODE_FORMAT:  #code is too short
+        return code
+    elif code[DASH_INDEX_COURSE_CODE_FORMAT] == '-':#code is already formated
+        return code
+    else:
+        prefix = code[:DASH_INDEX_COURSE_CODE_FORMAT]
+        suffix = code[DASH_INDEX_COURSE_CODE_FORMAT:]
+        return prefix + "-" + suffix
+
+
+def complete_to_min_query(prefix: str) -> list[str]:
+    DIGITS = [0,1,2,3,4,5,6,7,8,9]
+    
+    if not prefix.isdecimal():
+        raise Exception(f"The prefix {prefix} was given to complete_to_min_query, but it's bad. Expected decimal prefix (or at least already-formated code)")
+    elif len(prefix) > MAX_QUERY_LEN:
+        return []
+    elif len(prefix) >= MIN_QUERY_LEN:
+        return [prefix]
+    else:
+        pass
 
 class CourseStatistics:
     def __init__(self, average, histogram):
