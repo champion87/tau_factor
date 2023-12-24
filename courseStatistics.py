@@ -16,8 +16,6 @@ MAX_QUERY_LEN = 8
 #TODO empty results
 #TODO many results
 
-
-
 def simplify(course_details: dict, fields=DEFAULT_FIELDS): 
     results = course_details["results"][0]
     instances = results["instances"]
@@ -40,7 +38,7 @@ def format_query(code: str) -> str:
         return prefix + "-" + suffix
     
 #bases is a list!!!
-def append_all_digits_rec(digits: list[chr], bases: list[str], times: int) -> list[str]:
+def append_all_digits_rec(digits: list[str], bases: list[str], times: int) -> list[str]:
     if times < 0:
         raise Exception(f"Bad value of 'times' in add_all_digits_rec: {times}")
     elif times == 0:
@@ -62,10 +60,20 @@ def complete_to_min_query(prefix: str) -> list[str]:
         missing_digits = MIN_QUERY_LEN - len(prefix)
         return append_all_digits_rec(DIGITS, [prefix], missing_digits)
 
-class CourseStatistics:
-    def __init__(self, average, histogram):
-        pass
+class SemesterStatistics:
+    def __init__(self, year: int, semester: str, mean, median, standard_deviation):
+        self.year = year
+        self.semester = semester
+        self.mean = mean
+        self.median = median
+        self.standard_deviation = standard_deviation
 
+class CourseStatistics:
+    def __init__(self, code: str, name: str, semesters: list[SemesterStatistics]):
+        self.code = code
+        self.name = name
+        self.semesters = semesters
+    
 def get_course_statistics(prefix="") -> list[CourseStatistics]:
     if len(prefix) < MIN_QUERY_LEN:
         pass
